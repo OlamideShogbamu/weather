@@ -89,7 +89,7 @@ nbformat==5.10.4
 nest-asyncio==1.6.0
 notebook==7.2.0
 notebook_shim==0.2.4
-numpy==1.26.4
+numpy==1.21.6
 openai==1.30.3
 orjson==3.10.3
 overrides==7.7.0
@@ -109,7 +109,7 @@ Pygments==2.18.0
 python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
 python-json-logger==2.0.7
-pywin32==306
+pywin32==304
 pywinpty==2.0.13
 PyYAML==6.0.1
 pyzmq==26.0.3
