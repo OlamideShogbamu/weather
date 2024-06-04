@@ -1,1 +1,2 @@
 python-3.9.19
+ipython-8.24.0
