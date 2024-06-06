@@ -32,17 +32,42 @@ def weather(city):
         data = getForecast(key)
 
         daily_forecast = data['DailyForecasts'][0]
+
+        min_temp_f = daily_forecast['Temperature']['Minimum']['Value']
+        max_temp_f = daily_forecast['Temperature']['Maximum']['Value']
+        # Convert Fahrenheit to Celsius
+        min_temp_c = (min_temp_f - 32) * 5/9
+        max_temp_c = (max_temp_f - 32) * 5/9
+        avg_temp_c = round((min_temp_c + max_temp_c) / 2, 1)
+
+
         weather_info = {
             'Date': daily_forecast['Date'],
-            'Time': daily_forecast['Sun']['Rise'],
             'Temperature': {
-                'Minimum': daily_forecast['Temperature']['Minimum']['Value'],
-                'Maximum': daily_forecast['Temperature']['Maximum']['Value'],
-                'Unit': daily_forecast['Temperature']['Maximum']['Unit']
+                'Average': str(avg_temp_c),   # Converted to string
+                'Unit': 'Celsius'  # Updated unit
             },
-            'Rainfall': daily_forecast['Day']['Rain']['Value'],
+            'PrecipitationType': daily_forecast['Day']['PrecipitationType'],  # Assuming the key exists
+            'Humidity': daily_forecast['Day']['RelativeHumidity']['Average'],  # Assuming the key exists
+            'Wind': {
+                'Speed': daily_forecast['Day']['Wind']['Speed']['Value'],
+                'Direction': daily_forecast['Day']['Wind']['Direction']['English']
+            },
+            'Rainfall': daily_forecast['Day']['Rain']['Value'],  # Assuming the key exists
             'ThunderstormProbability': daily_forecast['Day']['ThunderstormProbability']
         }
+        # daily_forecast = data['DailyForecasts'][0]
+        # weather_info = {
+        #     'Date': daily_forecast['Date'],
+        #     'Time': daily_forecast['Sun']['Rise'],
+        #     'Temperature': {
+        #         'Minimum': daily_forecast['Temperature']['Minimum']['Value'],
+        #         'Maximum': daily_forecast['Temperature']['Maximum']['Value'],
+        #         'Unit': daily_forecast['Temperature']['Maximum']['Unit']
+        #     },
+        #     'Rainfall': daily_forecast['Day']['Rain']['Value'],
+        #     'ThunderstormProbability': daily_forecast['Day']['ThunderstormProbability']
+        # }
 
         # Convert to JSON format
         return jsonify(weather_info)
