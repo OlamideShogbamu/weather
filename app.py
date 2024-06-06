@@ -2,11 +2,17 @@ from flask import Flask, request, jsonify
 import os
 import json
 import urllib.request
+from datetime import datetime
 
 app = Flask(__name__)
 
 API = os.getenv('KEY')
 CountryCode = "NG"
+
+# Convert the date string to a more readable format
+def format_date(date_str):
+    date_obj = datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%S%z')
+    return date_obj.strftime('%dth of %B, %Y')
 
 def getLocation(CountryCode, city):
     searchaddress = f"http://dataservice.accuweather.com/locations/v1/cities/{CountryCode}/search?apikey={API}&q={city}&details=True"
@@ -42,7 +48,7 @@ def weather(city):
 
 
         weather_info = {
-            'Date': daily_forecast['Date'],
+            'Date': format_date(daily_forecast['Date']),
             'Temperature': {
                 'Average': str(avg_temp_c),   # Converted to string
                 'Unit': 'Celsius'  # Updated unit
