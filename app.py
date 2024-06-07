@@ -54,8 +54,8 @@ def weather(coordinate):
                 'Average': str(avg_temp_c),   # Converted to string
                 'Unit': 'Celsius'  # Updated unit
             },
-            'PrecipitationType': daily_forecast['Day']['PrecipitationType'],  # Assuming the key exists
-            'Humidity': daily_forecast['Day']['RelativeHumidity']['Average'],  # Assuming the key exists
+            'PrecipitationType': daily_forecast['Day']['PrecipitationType'] if 'PrecipitationType' in daily_forecast['Day'] else 'Rain',
+            'Humidity': daily_forecast['Day']['RelativeHumidity']['Average'] if 'RelativeHumidity' in daily_forecast['Day'] and 'Average' in daily_forecast['Day']['RelativeHumidity'] else 0, 
             'Wind': {
                 'Speed': daily_forecast['Day']['Wind']['Speed']['Value'],
                 'Direction': daily_forecast['Day']['Wind']['Direction']['English']
