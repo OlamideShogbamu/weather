@@ -14,28 +14,29 @@ def format_date(date_str):
     date_obj = datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%S%z')
     return date_obj.strftime('%dth of %B, %Y')
 
-def getLocation(CountryCode, city):
-    searchaddress = f"http://dataservice.accuweather.com/locations/v1/cities/{CountryCode}/search?apikey={API}&q={city}&details=True"
-    with urllib.request.urlopen(searchaddress) as response:
-        data = json.loads(response.read().decode())
-    location_key = data[0]['Key']
-    return location_key
+def getLocation(coordinate):
+  searchaddress = "http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=MDm1hm0KZD7OQNiTxnlZQsCncxRpRzgr&q="+coordinate+"&details=True"
+  with urllib.request.urlopen(searchaddress) as searchaddress:
+    data = json.loads(searchaddress.read().decode())
+  location_key = data['Key']
+  return location_key
+
 
 def getForecast(location_key):
-    daily_forecast_url = f"http://dataservice.accuweather.com/forecasts/v1/daily/5day/{location_key}?apikey={API}&details=true"
+    daily_forecast_url = f"http://dataservice.accuweather.com/forecasts/v1/daily/1day/{location_key}?apikey=MDm1hm0KZD7OQNiTxnlZQsCncxRpRzgr&details=True"
     with urllib.request.urlopen(daily_forecast_url) as response:
         data = json.loads(response.read().decode())
     return data
 
-@app.route('/weather/<city>', methods=['GET'])
-def weather(city):
-    city = city
-    if not city:
-        return jsonify({"error": "City is required"}), 400
+@app.route('/weather/<coordinate>', methods=['GET'])
+def weather(coordinate):
+    coordinate = coordinate
+    if not coordinate:
+        return jsonify({"error": "coordinate is required"}), 400
     
     try:
-        key = getLocation(CountryCode, city)
-        data = getForecast(key)
+        location_key = getLocation(coordinate)
+        data = getForecast(location_key)
 
         daily_forecast = data['DailyForecasts'][0]
 
@@ -62,18 +63,7 @@ def weather(city):
             'Rainfall': daily_forecast['Day']['Rain']['Value'],  # Assuming the key exists
             'ThunderstormProbability': daily_forecast['Day']['ThunderstormProbability']
         }
-        # daily_forecast = data['DailyForecasts'][0]
-        # weather_info = {
-        #     'Date': daily_forecast['Date'],
-        #     'Time': daily_forecast['Sun']['Rise'],
-        #     'Temperature': {
-        #         'Minimum': daily_forecast['Temperature']['Minimum']['Value'],
-        #         'Maximum': daily_forecast['Temperature']['Maximum']['Value'],
-        #         'Unit': daily_forecast['Temperature']['Maximum']['Unit']
-        #     },
-        #     'Rainfall': daily_forecast['Day']['Rain']['Value'],
-        #     'ThunderstormProbability': daily_forecast['Day']['ThunderstormProbability']
-        # }
+        
 
         # Convert to JSON format
         return jsonify(weather_info)
