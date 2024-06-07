@@ -15,7 +15,7 @@ def format_date(date_str):
     return date_obj.strftime('%dth of %B, %Y')
 
 def getLocation(coordinate):
-  searchaddress = "http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=MDm1hm0KZD7OQNiTxnlZQsCncxRpRzgr&q="+coordinate+"&details=True"
+  searchaddress = f"http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey={API}&q="+coordinate+"&details=True"
   with urllib.request.urlopen(searchaddress) as searchaddress:
     data = json.loads(searchaddress.read().decode())
   location_key = data['Key']
@@ -23,7 +23,7 @@ def getLocation(coordinate):
 
 
 def getForecast(location_key):
-    daily_forecast_url = f"http://dataservice.accuweather.com/forecasts/v1/daily/1day/{location_key}?apikey=MDm1hm0KZD7OQNiTxnlZQsCncxRpRzgr&details=True"
+    daily_forecast_url = f"http://dataservice.accuweather.com/forecasts/v1/daily/1day/{location_key}?apikey={API}&details=True"
     with urllib.request.urlopen(daily_forecast_url) as response:
         data = json.loads(response.read().decode())
     return data
